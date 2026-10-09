@@ -1,116 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Train Vacant Berth</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 600px;
-            text-align: center;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 2.5em;
-        }
-        
-        .icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-        }
-        
-        p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            font-size: 1.1em;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        button {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-        
-        button:hover {
-            background: #764ba2;
-        }
-        
-        .info-box {
-            background: #f5f5f5;
-            padding: 20px;
-            border-radius: 5px;
-            margin-top: 30px;
-            text-align: left;
-        }
-        
-        .info-box h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-        
-        .info-box ul {
-            color: #666;
-            margin-left: 20px;
-            line-height: 1.8;
-        }
-    </style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light"><title>Train Vacant Berth Finder</title>
+<style>
+:root{--navy:#142b47;--muted:#66758a;--blue:#2463eb;--border:#e2e8f0;--bg:#f5f7fb}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--navy);font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}button,input,select{font:inherit}button,select{cursor:pointer}button{transition:background .15s,box-shadow .15s,transform .15s}button:hover{filter:brightness(.97)}button:disabled{cursor:wait;opacity:.7}input,select,button{min-height:46px;border-radius:9px}input,select{width:100%;padding:10px 12px;border:1px solid #cdd6e2;color:var(--navy);background:white}input:hover,select:hover{border-color:#97adc8}:focus-visible{outline:3px solid #9bbaff;outline-offset:3px}label{display:block;font-size:13px;font-weight:650;margin-bottom:7px}button{border:1px solid var(--border);background:white;padding:10px 16px;font-weight:650;color:var(--navy)}[hidden]{display:none!important}.topbar{background:white;border-bottom:1px solid var(--border)}.topbar-inner{max-width:1160px;margin:auto;display:flex;align-items:center;gap:12px;padding:18px 28px}.brand-icon{background:var(--blue);color:white;border-radius:11px;width:40px;height:40px;display:grid;place-items:center}.brand-icon svg{width:24px;height:24px}.brand{font-weight:750;font-size:16px}.top-note{margin-left:auto;color:var(--muted);font-size:12px}.container{max-width:1160px;margin:auto;padding:36px 28px 24px}.eyebrow{font-size:11px;font-weight:750;letter-spacing:1.8px;color:var(--blue);text-transform:uppercase}h1{font-size:clamp(28px,4vw,38px);letter-spacing:-1.2px;margin:6px 0 8px;line-height:1.2}p{margin:0}.intro{color:var(--muted);margin-bottom:28px}.card{background:white;border:1px solid var(--border);border-radius:16px;box-shadow:0 4px 20px #142b4705}.search-card{padding:24px}.section-title{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin:0 0 20px}.step{width:25px;height:25px;display:grid;place-items:center;background:#edf3ff;color:var(--blue);border-radius:7px;font-size:12px}.search-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr) minmax(0,1fr) minmax(0,.8fr);gap:16px}.form-bottom{margin-top:20px;display:flex;align-items:center;justify-content:space-between;gap:20px}.hint{font-size:12px;color:var(--muted)}.primary{color:white;background:var(--blue);border-color:var(--blue);display:inline-flex;justify-content:center;align-items:center;gap:10px;box-shadow:0 3px 7px #2463eb22}.spinner{display:inline-block;width:17px;height:17px;border:2px solid #ffffff65;border-top-color:white;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.status{margin-top:18px;color:var(--muted);font-size:13px}.error{margin-top:20px;padding:20px;background:#fff5f5;border:1px solid #f3c5c5;border-radius:12px;color:#9b2525}.error strong{display:block;margin-bottom:5px}.error p{font-size:14px}.error-detail{margin-top:8px;white-space:pre-wrap;overflow-wrap:anywhere}.start-state{text-align:center;padding:48px 20px;margin-top:24px;border:1px dashed #ccd8e6;border-radius:16px;background:#f9fbff}.empty-icon{display:grid;place-items:center;margin:0 auto 16px;width:54px;height:54px;border-radius:50%;background:#eaf0fb;color:#6281ac;font-size:23px}.start-state h2,.empty h3{font-size:18px;margin:0 0 8px}.start-state p,.empty p{font-size:14px;color:var(--muted)}.results-heading{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px 0 14px}.results-heading h2{font-size:20px;letter-spacing:-.4px;margin:0}.success-tag{font-size:12px;color:#187458;background:#eaf8f1;padding:5px 10px;border-radius:20px}.summary{display:grid;grid-template-columns:1fr 1fr 1.6fr;gap:14px;margin-bottom:20px}.stat{padding:19px 22px}.stat-value{font-size:29px;line-height:1.3;font-weight:750;letter-spacing:-.8px;overflow-wrap:anywhere}.stat-label{font-size:12px;color:var(--muted);margin-top:4px}.stat-route{font-size:22px;letter-spacing:-.3px}.results-card{overflow:hidden}.filter-area{padding:22px;border-bottom:1px solid var(--border)}.filter-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:15px;align-items:end}.direction{display:flex;gap:6px}.direction button{padding:10px 12px;font-size:12px;white-space:nowrap}.direction button[aria-pressed="true"]{background:#edf3ff;border-color:#b8ccf7;color:#215acc}.filter-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:16px}.active-filters{display:flex;flex-wrap:wrap;align-items:center;gap:7px;min-height:28px}.chip{display:inline-flex;align-items:center;gap:6px;background:#edf3ff;color:#285bad;border-radius:6px;font-size:12px;padding:4px 9px}.muted{color:var(--muted);font-size:12px}.clear{min-height:32px;padding:4px 0;border:0;color:var(--blue);background:transparent;font-size:12px}.count-row{display:flex;align-items:center;justify-content:space-between;padding:17px 22px;gap:12px;font-size:13px}.sort-label{font-size:12px;color:var(--muted)}.table-wrap{overflow:auto;max-height:560px}table{width:100%;border-collapse:collapse;text-align:left}th{position:sticky;top:0;z-index:1;background:#f7f9fc;color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:1px;font-weight:700;padding:13px 22px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}td{padding:16px 22px;border-bottom:1px solid #eef1f6;font-size:14px}tbody tr:hover{background:#fafcff}tbody tr:last-child td{border-bottom:0}.coach{font-weight:750;color:#214d85}.berth{font-size:17px;font-weight:700}.badge{display:inline-block;border-radius:6px;padding:4px 9px;font-size:11px;font-weight:650;background:#f0f2f6;color:#4d5c70;overflow-wrap:anywhere}.type-L{background:#e8f7f1;color:#217555}.type-M{background:#fff3db;color:#94610d}.type-U{background:#eeedff;color:#6555a3}.type-S{background:#e8f3ff;color:#27669e}.type-P{background:#ffedf3;color:#a24e72}.station{font-weight:600}.empty{padding:44px 24px;text-align:center}.empty button{margin-top:18px}.mobile-cards{display:none}.table-hint{display:none}.footer{display:flex;justify-content:space-between;gap:15px;margin-top:22px;color:var(--muted);font-size:11px;padding:0 2px}.foot-link{color:#536a8a}.footer p{max-width:740px}
+@media(max-width:950px){.search-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.filter-grid{grid-template-columns:1fr 1fr}.summary{grid-template-columns:1fr 1fr 1.4fr}}
+@media(max-width:768px){.topbar-inner{padding:15px 20px}.top-note{display:none}.container{padding:26px 16px 22px}.brand{font-size:14px}.intro{font-size:14px;margin-bottom:22px}.search-card{padding:20px}.search-grid{grid-template-columns:minmax(0,1fr);gap:15px}.form-bottom{flex-direction:column;align-items:stretch;gap:14px}.primary{width:100%}.summary{grid-template-columns:1fr 1fr;gap:10px}.stat{padding:16px}.stat:last-child{grid-column:1/-1}.stat-value{font-size:27px}.stat-route{font-size:22px}.results-heading{align-items:start}.results-heading h2{font-size:18px}.success-tag{font-size:10px;white-space:nowrap}.filter-grid{grid-template-columns:1fr}.filter-area{padding:18px}.direction button{flex:1}.filter-bottom{align-items:start}.table-wrap{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}table{min-width:480px}th{padding:11px 12px;font-size:12px;white-space:nowrap}td{padding:13px 12px;font-size:14px;white-space:nowrap}.table-wrap .berth{font-size:15px}.table-wrap .badge{font-size:12px;padding:4px 7px}.mobile-cards{display:none}.table-hint{display:block;padding:0 16px 12px;color:var(--muted);font-size:11px}.berth-card{border:1px solid var(--border);border-radius:12px;padding:17px}.berth-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.berth-card .coach{font-size:19px}.berth-card .berth{font-size:22px}.route-row{display:flex;gap:12px;align-items:center;font-size:17px;margin:15px 0 8px;overflow-wrap:anywhere}.route-arrow{color:#8797ac}.count-row{padding:16px;align-items:start}.sort-label{max-width:120px;text-align:right}.footer{flex-direction:column;gap:8px}.start-state{padding:35px 18px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}.spinner{animation:none}}
+
+/* Let grid children shrink instead of expanding the page to native-control widths. */
+.container,.card,#resultsSection,.search-grid>div,.filter-grid>div,.stat{min-width:0;max-width:100%}
+input,select{min-width:0;max-width:100%;font-size:16px}
+label{font-size:14px}
+input[type="date"]{display:block;width:100%;min-width:0;max-width:100%;height:48px;appearance:none;-webkit-appearance:none;line-height:normal;text-align:left}
+input[type="date"]::-webkit-date-and-time-value{text-align:left;min-height:1.5em}
+input[type="date"]::-webkit-datetime-edit{min-width:0;padding:0}
+.date-help{color:var(--muted);font-size:12px;margin-top:6px;min-height:18px}
+.table-wrap{position:relative;isolation:isolate;width:100%;max-width:100%;min-width:0;overscroll-behavior-x:contain}
+.filter-bottom,.count-row,.results-heading{flex-wrap:wrap}
+.clear{flex-shrink:0;min-height:44px}
+.chip{max-width:100%;overflow-wrap:anywhere}
+@media(max-width:768px){
+  .container{padding:20px 12px}.search-card{padding:18px}
+  h1{font-size:28px;letter-spacing:-.6px}.intro{margin-bottom:18px}
+  .brand{min-width:0}.brand-icon{flex-shrink:0}
+  .start-state{padding:24px 16px}.start-state .empty-icon{display:none}
+  .table-wrap{overflow:auto;max-height:none;border-top:1px solid var(--border)}
+  table{min-width:540px;table-layout:auto}
+  th{position:static;z-index:auto;letter-spacing:.5px;border-top:0}
+  td,th{vertical-align:middle}
+  .filter-grid{grid-template-columns:minmax(0,1fr)}
+  .summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .direction{flex-wrap:wrap}.direction button{min-width:0;font-size:14px}
+  .count-row{gap:6px}.sort-label{max-width:none;text-align:left}
+  .success-tag{font-size:12px}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="icon">🚂</div>
-        <h1>Train Vacant Berth</h1>
-        <p>Find and book vacant berths on trains easily and conveniently.</p>
-        
-        <div class="button-group">
-            <button onclick="alert('Search functionality coming soon!')">Search Berths</button>
-            <button onclick="alert('Booking system coming soon!')">Book Now</button>
-        </div>
-        
-        <div class="info-box">
-            <h3>About This Service</h3>
-            <ul>
-                <li>Real-time berth availability</li>
-                <li>Easy online booking</li>
-                <li>Secure payment options</li>
-                <li>Instant confirmation</li>
-                <li>24/7 customer support</li>
-            </ul>
-        </div>
-    </div>
+<header class="topbar"><div class="topbar-inner"><div class="brand-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="3" width="14" height="15" rx="4"/><path d="M5 10h14M12 3v7M8 21l2-3m6 3-2-3"/><circle cx="8.5" cy="14" r=".8"/><circle cx="15.5" cy="14" r=".8"/></svg></div><span class="brand">Train Vacant Berth Finder</span></div></header>
+<main class="container">
+<h1>Train Vacant Berths</h1><p class="intro">Find available berths by coach, berth type and journey segment.</p>
+<section class="card search-card" aria-labelledby="searchTitle"><h2 id="searchTitle" class="section-title">Journey details</h2>
+<form id="searchForm"><div class="search-grid">
+<div><label for="trainNo">Train Number</label><input id="trainNo" name="trainNo" value="11125" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" title="Enter a 5-digit train number" required autocomplete="off"></div>
+<div><label for="boardingStation">Boarding Station</label><input id="boardingStation" name="boardingStation" value="INDB" pattern="[A-Za-z]{2,6}" maxlength="6" title="Enter a station code of 2 to 6 letters" required autocomplete="off" spellcheck="false" style="text-transform:uppercase"></div>
+<div><label for="journeyDate">Journey Date</label><input id="journeyDate" name="journeyDate" type="date" aria-describedby="dateHelp" required><p id="dateHelp" class="date-help"></p></div>
+<div><label for="travelClass">Class</label><select id="travelClass" name="cls"><option value="SL">SL · Sleeper</option><option value="3A">3A · AC 3 Tier</option><option value="2A">2A · AC 2 Tier</option><option value="1A">1A · AC First Class</option><option value="3E">3E · AC 3 Economy</option><option value="CC">CC · AC Chair Car</option><option value="EC">EC · Executive Chair</option><option value="2S">2S · Second Sitting</option></select></div>
+<div><label for="chartType">Chart Type</label><select id="chartType" name="chartType"><option value="1">Chart 1</option><option value="2">Chart 2</option></select></div>
+</div><div class="form-bottom"><p class="hint">Use the station code, for example INDB for Indore.</p><button id="searchButton" class="primary" type="submit"><span id="searchSpinner" class="spinner" hidden aria-hidden="true"></span><span id="searchButtonText">Search Vacant Berths</span><span id="searchArrow" aria-hidden="true">→</span></button></div></form>
+<p id="loadingStatus" class="status" role="status" hidden>Searching for vacant berths...</p></section>
+<section id="errorPanel" class="error" role="alert" hidden><strong>Unable to fetch vacant berth information.</strong><p id="errorMessage"></p><p id="errorDetail" class="error-detail" hidden></p></section>
+<section id="startState" class="start-state"><div class="empty-icon" aria-hidden="true">⌕</div><h2>Ready to search</h2><p>Choose your journey details, then tap Search Vacant Berths.</p></section>
+<section id="resultsSection" hidden aria-labelledby="resultsTitle"><div class="results-heading"><h2 id="resultsTitle">Vacant Berths Found</h2><span class="success-tag">✓ Search complete</span></div>
+<div class="summary"><div class="card stat"><div id="totalBerths" class="stat-value">0</div><div class="stat-label">Available Berth Records</div></div><div class="card stat"><div id="totalCoaches" class="stat-value">0</div><div class="stat-label">Coaches</div></div><div class="card stat"><div id="selectedRoute" class="stat-value stat-route">All segments</div><div class="stat-label">Selected Route</div></div></div>
+<div class="card results-card"><div class="filter-area"><div class="filter-grid">
+<div><label for="fromFilter">From Station</label><select id="fromFilter"><option value="">All stations</option></select></div>
+<div><label for="toFilter">To Station</label><select id="toFilter"><option value="">All stations</option></select></div>
+<div><label for="sortBy">Sort By</label><select id="sortBy"><option value="berthNumber">Berth Number</option><option value="coachName">Coach Name</option></select></div>
+<div><label id="directionLabel">Sort Direction</label><div class="direction" role="group" aria-labelledby="directionLabel"><button id="ascending" type="button" aria-pressed="true">Ascending ↑</button><button id="descending" type="button" aria-pressed="false">Descending ↓</button></div></div>
+</div><div class="filter-bottom"><div id="activeFilters" class="active-filters"></div><button id="clearFilters" class="clear" type="button">Clear Filters</button></div></div>
+<div class="count-row"><p id="resultCount" role="status" aria-live="polite"></p><span id="sortIndicator" class="sort-label"></span></div>
+<p class="table-hint">Swipe left or right to view all columns.</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Scrollable vacant berth table"><table aria-label="Vacant berth results"><thead><tr><th scope="col">Coach</th><th scope="col" id="berthHeader" aria-sort="ascending">Berth</th><th scope="col">Type</th><th scope="col">From</th><th scope="col">To</th><th scope="col">Split</th></tr></thead><tbody id="tableBody"></tbody></table></div>
+<div id="mobileCards" class="mobile-cards" aria-label="Vacant berth results"></div>
+<div id="emptyState" class="empty" hidden><div class="empty-icon" aria-hidden="true">⌕</div><h3>No vacant berths found</h3><p id="emptyMessage">There are no vacant berths matching your selected From / To filters.</p><button id="emptyClear" type="button">Clear Filters</button></div>
+</div></section>
+<footer class="footer"><p>Source: IRCTC chart data. A berth may appear for multiple journey segments. Results reflect the last search and do not guarantee a booking.</p></footer>
+</main>
+<script>
+'use strict';
+// For an authorized backend integration, change API_URL to your own proxy endpoint.
+// This standalone file calls IRCTC directly and never bypasses browser security.
+const API_URL = 'https://www.irctc.co.in/online-charts/api/vacantBerth';
+const $ = id => document.getElementById(id);
+const naturalCompare = new Intl.Collator('en', {numeric: true, sensitivity: 'base'}).compare;
+const BERTH_TYPES = {L:'Lower', M:'Middle', U:'Upper', S:'Side Lower', P:'Side Upper'};
+let apiResults = [];
+let filteredResults = [];
+let isLoading = false;
+let sortDirection = 'asc';
+function localToday() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+function showLoading(loading) {
+  isLoading = loading;
+  $('searchButton').disabled = loading;
+  $('searchForm').setAttribute('aria-busy', String(loading));
+  $('searchSpinner').hidden = !loading;
+  $('searchArrow').hidden = loading;
+  $('loadingStatus').hidden = !loading;
+  $('searchButtonText').textContent = loading ? 'Searching...' : 'Search Vacant Berths';
+}
+function showError(message, detail = '') {
+  $('errorMessage').textContent = message;
+  $('errorDetail').textContent = detail;
+  $('errorDetail').hidden = !detail;
+  $('errorPanel').hidden = false;
+}
+function validateResponse(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) throw new Error('The API returned an invalid response. Please try again.');
+  if (data.error !== null && data.error !== undefined && data.error !== '') {
+    const detail = typeof data.error === 'string' ? data.error : JSON.stringify(data.error);
+    throw new Error('IRCTC reported an error: ' + detail);
+  }
+  if (!Array.isArray(data.vbd)) throw new Error('The API response does not contain a valid vacant berth list. Please try again.');
+  const valid = data.vbd.every(item => item && typeof item === 'object' && !Array.isArray(item) &&
+    ['coachName','berthCode','from','to'].every(key => typeof item[key] === 'string' && item[key].trim().length > 0) &&
+    ['berthNumber','splitNo'].every(key => (typeof item[key] === 'number' || typeof item[key] === 'string') && String(item[key]).trim() !== '' && Number.isFinite(Number(item[key]))));
+  if (!valid) throw new Error('The API returned incomplete or invalid berth records. Please try again.');
+  return data.vbd;
+}
+async function fetchVacantBerths(event) {
+  if (event) event.preventDefault();
+  if (isLoading || !$('searchForm').reportValidity()) return;
+  const station = $('boardingStation').value.trim().toUpperCase();
+  $('boardingStation').value = station;
+  const payload = {trainNo: $('trainNo').value.trim(), boardingStation: station, remoteStation: station,
+    trainSourceStation: '', jDate: $('journeyDate').value, cls: $('travelClass').value, chartType: Number($('chartType').value)};
+  $('errorPanel').hidden = true;
+  $('resultsSection').hidden = true;
+  $('startState').hidden = true;
+  apiResults = []; filteredResults = [];
+  showLoading(true);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 25000);
+  try {
+    const response = await fetch(API_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload), signal:controller.signal});
+    if (!response.ok) throw new Error(`IRCTC returned HTTP ${response.status}. Please check the train number, station and journey date and try again.`);
+    let data;
+    try { data = await response.json(); } catch { throw new Error('The API returned an unreadable response instead of JSON. Please try again.'); }
+    apiResults = validateResponse(data);
+    populateFilters();
+    resetFilters();
+    $('resultsSection').hidden = false;
+  } catch (error) {
+    if (error.name === 'AbortError') showError('The request timed out. Please check your connection and try again.');
+    else if (error instanceof TypeError) showError('The browser could not reach the IRCTC API. Check your internet connection and try again.',
+      'If the connection is working, CORS or another browser/security restriction may be blocking the request. This page cannot distinguish CORS from other network failures. The API needs to be called through an appropriate backend/proxy that is permitted to access IRCTC; browser security cannot be bypassed here.');
+    else showError('Please check the train number, station and journey date and try again.', error.message);
+  } finally {clearTimeout(timeout); showLoading(false);}
+}
+function populateFilters() {
+  for (const [id, key] of [['fromFilter','from'],['toFilter','to']]) {
+    const select = $(id);
+    select.replaceChildren(new Option('All stations', ''));
+    const values = [...new Set(apiResults.map(item => item[key]))].sort(naturalCompare);
+    values.forEach(value => select.add(new Option(value, value)));
+  }
+}
+function applySorting(rows) {
+  const key = $('sortBy').value;
+  const direction = sortDirection === 'asc' ? 1 : -1;
+  return [...rows].sort((a,b) => {
+    const primary = key === 'coachName' ? naturalCompare(a.coachName,b.coachName) : Number(a.berthNumber)-Number(b.berthNumber);
+    const tie = key === 'coachName' ? Number(a.berthNumber)-Number(b.berthNumber) : naturalCompare(a.coachName,b.coachName);
+    return direction * (primary || tie || naturalCompare(a.from,b.from) || naturalCompare(a.to,b.to));
+  });
+}
+function applyFilters() {
+  const from = $('fromFilter').value, to = $('toFilter').value;
+  filteredResults = applySorting(apiResults.filter(item => (!from || item.from === from) && (!to || item.to === to)));
+  renderResults();
+}
+function resetFilters() {
+  $('fromFilter').value = ''; $('toFilter').value = '';
+  applyFilters();
+}
+function node(tag, className, text) {
+  const element = document.createElement(tag);
+  if (className) element.className = className;
+  if (text !== undefined) element.textContent = text;
+  return element;
+}
+function berthBadge(code) {
+  return node('span', 'badge' + (Object.hasOwn(BERTH_TYPES,code) ? ' type-'+code : ''), Object.hasOwn(BERTH_TYPES,code) ? BERTH_TYPES[code] : code);
+}
+function renderResults() {
+  const from = $('fromFilter').value, to = $('toFilter').value;
+  $('totalBerths').textContent = apiResults.length;
+  $('totalCoaches').textContent = new Set(apiResults.map(item => item.coachName)).size;
+  $('selectedRoute').textContent = from || to ? `${from || 'Any station'} → ${to || 'Any station'}` : 'All segments';
+  $('resultCount').textContent = `Showing ${filteredResults.length} of ${apiResults.length} berths`;
+  const sortingByCoach = $('sortBy').value === 'coachName';
+  $('sortIndicator').textContent = `${sortingByCoach ? 'Coach Name' : 'Berth Number'} ${sortDirection === 'asc' ? '↑' : '↓'}`;
+  const coachHeader = document.querySelector('th');
+  coachHeader.removeAttribute('aria-sort'); $('berthHeader').removeAttribute('aria-sort');
+  (sortingByCoach ? coachHeader : $('berthHeader')).setAttribute('aria-sort', sortDirection === 'asc' ? 'ascending' : 'descending');
+  $('activeFilters').replaceChildren();
+  if (from) $('activeFilters').append(node('span','chip','From: '+from));
+  if (to) $('activeFilters').append(node('span','chip','To: '+to));
+  if (!from && !to) $('activeFilters').append(node('span','muted','All journey segments'));
+  const tableFragment = document.createDocumentFragment(), cardFragment = document.createDocumentFragment();
+  for (const item of filteredResults) {
+    const row = node('tr');
+    for (const [key,className] of [['coachName','coach'],['berthNumber','berth'],['berthCode',''],['from','station'],['to','station'],['splitNo','']]) {
+      const cell = node('td',className);
+      if (key === 'berthCode') cell.append(berthBadge(item.berthCode)); else cell.textContent = item[key];
+      row.append(cell);
+    }
+    tableFragment.append(row);
+    const card = node('article','berth-card');
+    const header = node('div','berth-card-header');header.append(node('span','coach',item.coachName),node('span','berth','#'+item.berthNumber));
+    const route = node('div','route-row');route.append(node('span','station',item.from),node('span','route-arrow','→'),node('span','station',item.to));
+    card.append(header,berthBadge(item.berthCode),route,node('p','muted','Split: '+item.splitNo));cardFragment.append(card);
+  }
+  $('tableBody').replaceChildren(tableFragment); $('mobileCards').replaceChildren(cardFragment);
+  const noResults = filteredResults.length === 0;
+  $('emptyState').hidden = !noResults;
+  document.querySelector('.table-hint').hidden = noResults;
+  document.querySelector('.table-wrap').hidden = noResults; $('mobileCards').hidden = noResults;
+  $('emptyMessage').textContent = apiResults.length === 0 ? 'No vacant berths were returned for this train, class and journey date. Try another search.' : 'There are no vacant berths matching your selected From / To filters.';
+  $('emptyClear').hidden = apiResults.length === 0;
+}
+function setSortDirection(direction) {
+  sortDirection = direction;
+  $('ascending').setAttribute('aria-pressed', String(direction === 'asc'));
+  $('descending').setAttribute('aria-pressed', String(direction === 'desc'));
+  applyFilters();
+}
+function updateDateHelp() {
+  const value = $('journeyDate').value;
+  if (!value) { $('dateHelp').textContent = 'Choose your journey date.'; return; }
+  const [year,month,day] = value.split('-').map(Number);
+  const date = new Date(year,month-1,day);
+  const formatted = new Intl.DateTimeFormat('en-IN', {day:'numeric',month:'short',year:'numeric'}).format(date);
+  $('dateHelp').textContent = (value === localToday() ? 'Today · ' : '') + formatted;
+}
+$('journeyDate').value = localToday();
+updateDateHelp();
+$('journeyDate').addEventListener('change', updateDateHelp);
+$('searchForm').addEventListener('submit',fetchVacantBerths);
+['fromFilter','toFilter','sortBy'].forEach(id => $(id).addEventListener('change',applyFilters));
+$('ascending').addEventListener('click',()=>setSortDirection('asc'));
+$('descending').addEventListener('click',()=>setSortDirection('desc'));
+$('clearFilters').addEventListener('click',resetFilters);
+$('emptyClear').addEventListener('click',resetFilters);
+</script>
 </body>
 </html>
