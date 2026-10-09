@@ -74,6 +74,7 @@ input[type="date"]::-webkit-datetime-edit{min-width:0;padding:0}
 // For an authorized backend integration, change API_URL to your own proxy endpoint.
 // This standalone file calls IRCTC directly and never bypasses browser security.
 const API_URL = 'https://www.irctc.co.in/online-charts/api/vacantBerth';
+const COMPOSITION_API_URL = 'https://www.irctc.co.in/online-charts/api/trainComposition';
 const $ = id => document.getElementById(id);
 const naturalCompare = new Intl.Collator('en', {numeric: true, sensitivity: 'base'}).compare;
 const BERTH_TYPES = {L:'Lower', M:'Middle', U:'Upper', S:'Side Lower', P:'Side Upper'};
@@ -113,12 +114,35 @@ function validateResponse(data) {
   if (!valid) throw new Error('The API returned incomplete or invalid berth records. Please try again.');
   return data.vbd;
 }
+// Both requests share one loading lock and abort signal. No fallback station is used.
+async function postApi(url, payload, signal, label) {
+  const response = await fetch(url, {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(payload), signal
+  });
+  if (!response.ok) throw new Error(`${label}: IRCTC returned HTTP ${response.status}. Please try again.`);
+  try { return await response.json(); }
+  catch { throw new Error(`${label}: the API returned an unreadable response instead of JSON.`); }
+}
+function getRemoteStation(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    throw new Error('Train details: the API returned an invalid response.');
+  }
+  if (data.error !== null && data.error !== undefined && data.error !== '') {
+    throw new Error('Train details: ' + (typeof data.error === 'string' ? data.error : JSON.stringify(data.error)));
+  }
+  const code = data.chartStatusResponseDto?.remoteStationCode;
+  if (typeof code !== 'string' || !code.trim()) {
+    throw new Error('Train details did not include a remote station code. Vacant berths could not be searched. Please try again.');
+  }
+  return code.trim();
+}
 async function fetchVacantBerths(event) {
   if (event) event.preventDefault();
   if (isLoading || !$('searchForm').reportValidity()) return;
   const station = $('boardingStation').value.trim().toUpperCase();
   $('boardingStation').value = station;
-  const payload = {trainNo: $('trainNo').value.trim(), boardingStation: station, remoteStation: station,
+  const payload = {trainNo: $('trainNo').value.trim(), boardingStation: station,
     trainSourceStation: '', jDate: $('journeyDate').value, cls: $('travelClass').value, chartType: Number($('chartType').value)};
   $('errorPanel').hidden = true;
   $('resultsSection').hidden = true;
@@ -126,12 +150,17 @@ async function fetchVacantBerths(event) {
   apiResults = []; filteredResults = [];
   showLoading(true);
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 25000);
+  const timeout = setTimeout(() => controller.abort(), 50000);
   try {
-    const response = await fetch(API_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload), signal:controller.signal});
-    if (!response.ok) throw new Error(`IRCTC returned HTTP ${response.status}. Please check the train number, station and journey date and try again.`);
-    let data;
-    try { data = await response.json(); } catch { throw new Error('The API returned an unreadable response instead of JSON. Please try again.'); }
+    $('loadingStatus').textContent = 'Checking train details...';
+    const composition = await postApi(COMPOSITION_API_URL, {
+      trainNo: payload.trainNo,
+      jDate: payload.jDate,
+      boardingStation: station
+    }, controller.signal, 'Train details');
+    const remoteStation = getRemoteStation(composition);
+    $('loadingStatus').textContent = 'Searching for vacant berths...';
+    const data = await postApi(API_URL, {...payload, remoteStation}, controller.signal, 'Vacant berths');
     apiResults = validateResponse(data);
     populateFilters();
     resetFilters();
